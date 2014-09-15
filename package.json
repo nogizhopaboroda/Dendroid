@@ -1,0 +1,14 @@
+{
+  "name": "dendroid",
+  "description": "Observable tree",
+  "version": "0.1.0",
+  "author": "Alexander Zhukov",
+  "main": "./dist/dendroid.js",
+  "devDependencies": {
+    "gulp-coffee": "^2.2.0",
+    "gulp-util": "^3.0.1",
+    "gulp": "^3.8.8",
+    "gulp-mocha": "^1.1.0",
+    "gulp-watch": "^1.0.4"
+  }
+}

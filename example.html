@@ -1,0 +1,26 @@
+<html>
+	<head>
+		<script src="dist/dendroid.js"></script>
+		<title>testing dendroid</title>
+	</head>
+	<body>
+		<b>look at console...</b><br>
+		<script>
+			var b = {
+				a: 1,
+				b: {
+					c: {
+						d: {
+							e: {
+								f: 23
+							}
+						}
+					}
+				},
+				c: [1,2,[1,2], {a: [1,2,34]}]
+			};
+
+			var a = Dendroid(b);
+		</script>
+	</body>
+</html>

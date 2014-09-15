@@ -1,0 +1,45 @@
++ $LO(<object>) - initialize
+
++ object.watch(<property>, callback) - watch property
+
+object.watch('*', callback(new_value, last_value, path)) - watch all properties
+
++ $LO(<object>).watch().watch().watch()...  - chainable watchers
+
+{
+	a: function(){
+		/* computed */
+	}
+}  - computed property
+
+
++ $LO.version - get current version
+
++ arrays support
+
+
+
+всплывание события
+
+examples = ->
+
+  #watch push
+  eee = [1,2]
+  eee.push = (arg) ->
+    callback()
+    Array.prototype.push.call(@, arg)
+
+  # Object methods
+  Object.getOwnPropertyNames(Array.prototype)
+
+  #lookup setters/getters
+  Object.getOwnPropertyDescriptor(obj, key)
+
+  #фризить объект
+  #на добавлении нового свойства через точечную нотацию
+  #ловить typeerror и переопределть объект заново
+
+
+
+
+брать описание как скриншот из mocha тестов
