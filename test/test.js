@@ -55,12 +55,13 @@ describe('Dendroid', function(){
 
 	describe('Watchers', function(){
 
-		it('Can observe properties', function(){
+		it('Can observe primitive properties', function(){
 
 			var target = lib.Dendroid(stub_object);
 
-			target.c.watch(function(path){
-				assert.equal(path, 'c.0');
+			target.c.watch(function(new_value, old_value, path){
+				assert.equal(new_value, 345);
+				assert.equal(old_value, 1);
 			});
 			target.c[0] = 345;
 			assert.equal(target.c[0], 345);
@@ -73,6 +74,40 @@ describe('Dendroid', function(){
 			assert.equal(target.b.watch(), target.b);
 			assert.equal(target.b.c.d.e.watch(), target.b.c.d.e);
 			assert.equal(target.c[3].a.watch(), target.c[3].a);
+		});
+
+		it('Correctly replaces hash', function(){
+
+			var target = lib.Dendroid(stub_object);
+
+			var new_hash_property = {
+				e: 12,
+				d: 21,
+				f: {
+					g: 23
+				}
+			};
+
+			target.b.c = new_hash_property;
+			assert.equal(target.b.c.to_json(), JSON.stringify(new_hash_property));
+			assert.equal(target.b.c.parent, target.b);
+			assert.equal(target.b.c.f.parent, target.b.c);
+		});
+
+		it('Correctly replaces array', function(){
+
+			var target = lib.Dendroid(stub_object);
+
+			var new_hash_property = [1,2, {
+				f: {
+					g: 23
+				}
+			}];
+
+			target.b.c = new_hash_property;
+			assert.equal(target.b.c.to_json(), JSON.stringify(new_hash_property));
+			assert.equal(target.b.c.parent, target.b);
+			assert.equal(target.b.c[2].f.parent, target.b.c[2]);
 		});
 
 	});

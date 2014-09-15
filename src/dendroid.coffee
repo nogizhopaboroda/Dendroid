@@ -44,11 +44,12 @@ class Dendroid
       else
 
         (=>
-          _value = value
-          _key = key
+          [_value, _key] = [value, key]
 
           Object.defineProperty collection, key,
             set: (new_value) =>
+
+              _backup_old_value = _value
 
               if typeof new_value is 'object'
                 _value = namespace.Dendroid(new_value)
@@ -58,7 +59,7 @@ class Dendroid
                 _value = new_value
 
               for listener in collection.listeners
-                listener.call(collection, collection.get_path() + '.' + _key)
+                listener.call(collection, new_value, _backup_old_value, collection.get_path() + '.' + _key)
             get: ->
               _value
         )()
