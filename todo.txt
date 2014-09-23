@@ -2,7 +2,7 @@
 
 + object.watch(<property>, callback) - watch property
 
-object.watch('*', callback(new_value, last_value, path)) - watch all properties
++ object.watch('*', callback(new_value, old_value, path)) - watch all properties
 
 + $LO(<object>).watch().watch().watch()...  - chainable watchers
 
@@ -18,8 +18,29 @@ object.watch('*', callback(new_value, last_value, path)) - watch all properties
 + arrays support
 
 
++ всплывание события
 
-всплывание события
+
+
+
+//---------------------------------------
+
+
+- refactor setter definition L54-L79
+- refactor specs
+- refactor get_path method
+
+
+
+
+
+
+
+для массивов следить за length
+var aa = Object.create(Array.prototype, {length: {get: function(){ return 1 }, set: function(nv){ console.log(666, nv) }}})
+
+http://perfectionkills.com/how-ecmascript-5-still-does-not-allow-to-subclass-an-array/
+
 
 examples = ->
 

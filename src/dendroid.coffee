@@ -2,6 +2,7 @@
 
 namespace = if module? then module.exports else @
 
+
 class Dendroid
 
   define_property: (object, key, value, enumerable = false) ->
@@ -18,8 +19,11 @@ class Dendroid
 
     @define_property(collection, 'listeners', [])
 
-    @define_property(collection, 'watch', (callback) ->
-      collection.listeners.push(callback)
+    @define_property(collection, 'watch', (path, callback) ->
+      collection.listeners.push(
+        path: path
+        callback: callback
+      )
       collection
     )
 
@@ -49,7 +53,8 @@ class Dendroid
           Object.defineProperty collection, key,
             set: (new_value) =>
 
-              _backup_old_value = _value
+              _old_value = _value
+              _current_key_path = collection.get_path() + '.' + _key
 
               if typeof new_value is 'object'
                 _value = namespace.Dendroid(new_value)
@@ -59,7 +64,21 @@ class Dendroid
                 _value = new_value
 
               for listener in collection.listeners
-                listener.call(collection, new_value, _backup_old_value, collection.get_path() + '.' + _key)
+                if listener.path == '*' or listener.path == _key
+                  listener.callback.apply(collection, [new_value, _old_value, _key])
+
+
+              bubble_event = (inst) ->
+                for listener in inst.listeners
+                  if listener.path == '*' or listener.path == _current_key_path.replace(inst.get_path() + '.', '')
+                    listener.callback.apply(
+                      inst,
+                      [new_value, _old_value, _current_key_path.replace(inst.get_path() + '.', '')]
+                    )
+                bubble_event(inst.parent) if inst.parent?
+              bubble_event(collection.parent) if collection.parent?
+
+
             get: ->
               _value
         )()

@@ -55,16 +55,73 @@ describe('Dendroid', function(){
 
 	describe('Watchers', function(){
 
-		it('Can observe primitive properties', function(){
+		describe('One Level Watchers', function(){
 
-			var target = lib.Dendroid(stub_object);
-
-			target.c.watch(function(new_value, old_value, path){
-				assert.equal(new_value, 345);
-				assert.equal(old_value, 1);
+			it('Can match all properties', function(){
+				var target = lib.Dendroid(stub_object);
+				target.c.watch('*', function(new_value, old_value, path){
+					assert.equal(new_value, 345);
+					assert.equal(old_value, 1);
+				});
+				target.c[0] = 345;
+				assert.equal(target.c[0], 345);
 			});
-			target.c[0] = 345;
-			assert.equal(target.c[0], 345);
+
+			it('Can match only one property', function(){
+				var target = lib.Dendroid(stub_object);
+				target.c.watch('1', function(new_value, old_value, path){
+					assert.equal(new_value, 678);
+					assert.equal(old_value, 2);
+				});
+				target.c[1] = 678;
+				target.c[0] = 999;
+				assert.equal(target.c[1], 678);
+			});
+
+			it('Pass path parameter correctly', function(){
+				var target = lib.Dendroid(stub_object);
+				target.c.watch('2', function(new_value, old_value, path){
+					assert.equal(path, '2');
+				});
+				target.c[2] = 'test';
+				assert.equal(target.c[2], 'test');
+			});
+
+		});
+
+		describe('Child Watchers', function(){
+
+			it('Can match all properties', function(){
+				var target = lib.Dendroid(stub_object);
+				target.c.watch('*', function(new_value, old_value, path){
+					assert.equal(path, '3.a.0');
+					assert.equal(new_value, 989);
+					assert.equal(old_value, 1);
+				});
+				target.c[3].a[0] = 989;
+				assert.equal(target.c[3].a[0], 989);
+			});
+
+			it('Can match only one property', function(){
+				var target = lib.Dendroid(stub_object);
+				target.c.watch('3.a.2', function(new_value, old_value, path){
+					assert.equal(new_value, 256);
+					assert.equal(old_value, 34);
+				});
+				target.c[3].a[2] = 256;
+				target.c[3].a[1] = 777;
+				assert.equal(target.c[3].a[2], 256);
+			});
+
+			it('Pass path parameter correctly', function(){
+				var target = lib.Dendroid(stub_object);
+				target.c.watch('3.a.1', function(new_value, old_value, path){
+					assert.equal(path, '3.a.1');
+				});
+				target.c[3].a[1] = 'ok';
+				assert.equal(target.c[3].a[1], 'ok');
+			});
+
 		});
 
 		it('Watch method returns current level', function(){
@@ -121,6 +178,11 @@ describe('Dendroid', function(){
 			assert.equal(target.to_json(), JSON.stringify(stub_object));
 			assert.equal(target.c.to_json(), JSON.stringify(stub_object.c));
 			assert.equal(target.b.c.to_json(), JSON.stringify(stub_object.b.c));
+		});
+
+		it('Returns array/hash property path', function(){
+			assert.equal(target.b.c.d.e.get_path(), 'b.c.d.e');
+			assert.equal(target.c[3].a.get_path(), 'c.3.a');
 		});
 
 	});
