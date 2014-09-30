@@ -61,6 +61,8 @@ examples = ->
   #ловить typeerror и переопределть объект заново
 
 
+http://www.bennadel.com/blog/2291-invoking-a-native-javascript-constructor-using-call-or-apply.htm
+http://javascriptweblog.wordpress.com/2010/09/27/the-secret-life-of-javascript-primitives/
 
 
 брать описание как скриншот из mocha тестов

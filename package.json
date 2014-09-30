@@ -9,6 +9,7 @@
     "gulp-util": "^3.0.1",
     "gulp": "^3.8.8",
     "gulp-mocha": "^1.1.0",
-    "gulp-watch": "^1.0.4"
+    "gulp-watch": "^1.0.4",
+    "benchmark": "^1.0.0"
   }
 }
